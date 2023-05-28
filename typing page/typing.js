@@ -24,7 +24,8 @@ let intervalId = null;
 
 let typedWords = 0;
 let correctWords = 0;
-let TotalWords = 1;
+let totalWords = 1;
+let correctCharsTyped = 0;
 let currentWordTyping = 0;
 let timerForScore = true;
 let cnt = 0;
@@ -378,7 +379,7 @@ input.addEventListener("input", (e) => {
                     moveCaret(index);
                 }
             }
-            if (currentWordTyping >= TotalWords) {
+            if (currentWordTyping >= totalWords) {
                 final();
                 ended = true;
                 return;
@@ -491,7 +492,7 @@ totalWordsInText(originalString);
 function totalWordsInText(originalString) {
     for (let i = 0; i < originalString.length; i++) {
         if (originalString[i] === ' ')
-            TotalWords++;
+            totalWords++;
     }
 }
 
@@ -530,6 +531,13 @@ function Words() {
         if (flag === true && i + 1 === originalString.length)
             correctWords++;
     }
+
+    for(let i=0; i < input.value.length; i++){
+        let index = document.querySelector(`p.given-text span.span${i}`)
+        if(input.value[i] === originalString[i] && !index.classList.contains('notTyped'))
+            correctCharsTyped++;
+    }
+    console.log(correctCharsTyped)
 }
 
 function timer() {
@@ -577,7 +585,7 @@ function final() {
     clearInterval(intervalId);
     input.disabled = true;
     Words();
-    S = (correctWords / (cnt / 60)).toFixed(2);
+    S = ((correctCharsTyped/5) / (cnt / 60)).toFixed(2);
     A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
     score.textContent = `${S} wpm`;
     accuracy.textContent = `${A} %`;
