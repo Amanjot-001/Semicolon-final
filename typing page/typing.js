@@ -6,6 +6,10 @@ const resDiv = document.querySelectorAll('.result-content>div>p');
 const liveTime = document.querySelector('.live-time>div>p');
 const typingArea = document.querySelector('.typing-area');
 const nav = document.querySelector('nav');
+const inputArea = document.querySelector('.own-text');
+const popup = document.querySelector('.popups');
+const inputOwnTextWrapper = document.querySelector('.inputOwnTextWrapper');
+const inputText = document.querySelector('.input-text');
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -13,18 +17,20 @@ const caret = document.querySelector(".caret");
 const timerSet = document.querySelectorAll(".timer-options>li");
 const time = document.querySelector(".fa-clock");
 
-const originalString = str.textContent.replace(/\s+/g, " ").trim();
+let originalString = str.textContent.replace(/\s+/g, " ").trim();
 
 let clock = 0;
 let clockActive = false;
-let liActiveValue = 0; 
-let inputStarted = false; 
-let clockHover = false; 
+let liActiveValue = 0;
+let inputStarted = false;
+let clockHover = false;
 let intervalId = null;
 
-let typedWords = 0;
-let correctWords = 0;
+// let typedWords = 0;
+// let correctWords = 0;
 let totalWords = 1;
+// let totalChars = 0;
+let totalCharsTyped = 0;
 let correctCharsTyped = 0;
 let currentWordTyping = 0;
 let timerForScore = true;
@@ -39,6 +45,8 @@ let line = 0;
 let scrollDistance = 0;
 let flag = false;
 let totalLines = 0;
+let nextLineTop = 78;
+let maxLines = 0;
 
 const stopWatch = document.querySelector('.live-time>div>p');
 const score = document.querySelector('.score>p>span');
@@ -48,6 +56,10 @@ const afterText = document.querySelector('#after-text');
 
 const capsLockIndicator = document.querySelector('.caps-lock');
 const capsMsg = document.querySelector('.caps-lock>p>span')
+
+const width = window.innerWidth || document.documentElement.clientWidth;
+const height = typingArea.getBoundingClientRect().height;
+maxLines = Math.floor((height - 35) / 36) - 3;
 
 document.addEventListener('DOMContentLoaded', function () {
     var defaultTheme = 'theme1';
@@ -59,6 +71,10 @@ input.style.width = '0';
 input.style.border = '0';
 input.style.padding = '0';
 
+window.addEventListener('resize', () => {
+    location.reload();
+})
+
 input.addEventListener("keyup", function (event) {
     if (event.getModifierState("CapsLock")) {
         capsLockIndicator.style.visibility = 'visible';
@@ -69,17 +85,16 @@ input.addEventListener("keyup", function (event) {
     }
 });
 
-str.addEventListener('click', () => {
-    input.focus();
-})
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         input.focus();
+        typingArea.style.overflowY = 'hidden';
     }
 });
 
 document.addEventListener('click', (event) => {
+    input.blur();
     const clickedElement = event.target;
     if (clickedElement.tagName.toLowerCase() !== 'button' &&
         clickedElement.tagName.toLowerCase() !== 'a' &&
@@ -222,13 +237,13 @@ let firstWordTop = document.querySelector(".span0").getBoundingClientRect().top;
 
 input.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key === "Backspace") {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default behavior of the key combination
         return;
     }
     let ptr = input.value;
     if (ptr.length < 1) {
         return;
-    }
+    } //if no character is left
 
     if (e.key === "Backspace") {
         let once = true;
@@ -236,6 +251,7 @@ input.addEventListener("keydown", (e) => {
         let index = document.querySelector(
             `p.given-text span.span${ptr.length - 1}`
         );
+        // remove notTyped class from all chars till the place where space was entered
         while (index.classList.contains("notTyped")) {
             if (once) {
                 let afterIndex = document.querySelector(
@@ -246,10 +262,10 @@ input.addEventListener("keydown", (e) => {
                 );
                 let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
                 let afterIndexTop = afterIndex.getBoundingClientRect().top;
-                if (index.getBoundingClientRect().top !== afterIndexTop) {
+                if (index.getBoundingClientRect().top != afterIndexTop) {
                     top = true;
                     moveCaretBack(index);
-                } else if (index.getBoundingClientRect().top !== beforeIndexTop) {
+                } else if (index.getBoundingClientRect().top != beforeIndexTop) {
                     top = true;
                     moveCaretBack(beforeIndex);
                     input.value = input.value.slice(0, -1);
@@ -265,12 +281,13 @@ input.addEventListener("keydown", (e) => {
             flag = true;
         }
         if (flag) {
+            // only if above loop ran
             input.value = ptr;
             input.value += originalString[ptr.length - 1];
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + index.getBoundingClientRect().width;
             caret.style.left = `${caretLeft}px`;
             if (!top) {
-                let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
+                let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
                 caret.style.top = `${caretTop}px`;
             }
             flag = false;
@@ -278,14 +295,13 @@ input.addEventListener("keydown", (e) => {
         } else {
             index.classList.remove("right");
             index.classList.remove("wrong");
-            let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
+            let caretLeft = index.getBoundingClientRect().left - firstWordLeft;
             caret.style.left = `${caretLeft}px`;
-            let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
+            let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
             caret.style.top = `${caretTop}px`;
         }
         if (ptr.length == 1) {
-            caret.style.left = "20px";
-            return;
+            caret.style.left = "0px";
         }
 
         let afterIndex = document.querySelector(
@@ -296,7 +312,7 @@ input.addEventListener("keydown", (e) => {
         );
         let beforeIndexTop = beforeIndex.getBoundingClientRect().top;
         let afterIndexTop = afterIndex.getBoundingClientRect().top;
-        if (index.getBoundingClientRect().top !== afterIndexTop) {
+        if (index.getBoundingClientRect().top != afterIndexTop) {
             moveCaretBack(index);
         } else if (index.getBoundingClientRect().top != beforeIndexTop) {
             moveCaretBack(beforeIndex);
@@ -378,6 +394,7 @@ input.addEventListener("input", (e) => {
                 } else {
                     moveCaret(index);
                 }
+                return;
             }
             if (currentWordTyping >= totalWords) {
                 final();
@@ -497,47 +514,48 @@ function totalWordsInText(originalString) {
 }
 
 function Words() {
-    input.value = input.value.replace(/\s+/g, " ").trim();
-    let toCheckFirstWord = true;
-    let toCheckOtherWords = false;
-    for (let i = 0; i < input.value.length; i++) {
-        if (toCheckOtherWords === true)
-            toCheckFirstWord = true;
-        if (input.value[i] === ' ') {
-            typedWords++;
-            toCheckFirstWord = false;
-            toCheckOtherWords = true;
-        }
-    }
-    if (toCheckFirstWord === true && input.value.length < originalString.length)
-        typedWords++;
-    if (input.value.length >= originalString.length)
-        typedWords++;
+    // input.value = input.value.replace(/\s+/g, " ").trim();
+    // let toCheckFirstWord = true;
+    // let toCheckOtherWords = false;
+    // for (let i = 0; i < input.value.length; i++) {
+    //     if (toCheckOtherWords === true)
+    //         toCheckFirstWord = true;
+    //     if (input.value[i] === ' ') {
+    //         typedWords++;
+    //         toCheckFirstWord = false;
+    //         toCheckOtherWords = true;
+    //     }
+    // }
+    // if (toCheckFirstWord === true && input.value.length < originalString.length)
+    //     typedWords++;
+    // if (input.value.length >= originalString.length)
+    //     typedWords++;
 
-    let flag = true;
+    // let flag = true;
+    // for (let i = 0; i < input.value.length; i++) {
+    //     let index = document.querySelector(`p.given-text span.span${i}`)
+    //     if ((input.value[i] !== originalString[i] && input.value[i] !== ' ') || index.classList.contains('notTyped')) {
+    //         flag = false;
+    //     }
+    //     if (flag === true && input.value[i] === ' ' && input.value[i] === originalString[i]) {
+    //         correctWords++;
+    //     }
+    //     if (flag === false && input.value[i] === ' ') {
+    //         flag = true;
+    //     }
+    //     if (flag === true && i + 1 === input.value.length && originalString[i + 1] === ' ')
+    //         correctWords++;
+    //     if (flag === true && i + 1 === originalString.length)
+    //         correctWords++;
+    // }
+
     for (let i = 0; i < input.value.length; i++) {
         let index = document.querySelector(`p.given-text span.span${i}`)
-        if ((input.value[i] !== originalString[i] && input.value[i] !== ' ') || index.classList.contains('notTyped')) {
-            flag = false;
-        }
-        if (flag === true && input.value[i] === ' ' && input.value[i] === originalString[i]) {
-            correctWords++;
-        }
-        if (flag === false && input.value[i] === ' ') {
-            flag = true;
-        }
-        if (flag === true && i + 1 === input.value.length && originalString[i + 1] === ' ')
-            correctWords++;
-        if (flag === true && i + 1 === originalString.length)
-            correctWords++;
-    }
-
-    for(let i=0; i < input.value.length; i++){
-        let index = document.querySelector(`p.given-text span.span${i}`)
-        if(input.value[i] === originalString[i] && !index.classList.contains('notTyped'))
+        if (input.value[i] === originalString[i] && !index.classList.contains('notTyped'))
             correctCharsTyped++;
     }
-    console.log(correctCharsTyped)
+    // totalChars = originalString.length;
+    totalCharsTyped = input.value.length;
 }
 
 function timer() {
@@ -582,11 +600,12 @@ function info() {
 }
 
 function final() {
+    typingArea.style.paddingTop = '35px'
     clearInterval(intervalId);
     input.disabled = true;
     Words();
-    S = ((correctCharsTyped/5) / (cnt / 60)).toFixed(2);
-    A = (((correctWords / (cnt / 60)) * 100) / (typedWords / (cnt / 60))).toFixed(2);
+    S = ((correctCharsTyped / 5) / (cnt / 60)).toFixed(2);
+    A = ((correctCharsTyped/totalCharsTyped) * 100).toFixed(2);
     score.textContent = `${S} wpm`;
     accuracy.textContent = `${A} %`;
     timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
@@ -598,32 +617,72 @@ function final() {
 }
 
 function moveCaret(index) {
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20 + index.getBoundingClientRect().width;
+    let caretLeft =
+        index.getBoundingClientRect().left - firstWordLeft + index.getBoundingClientRect().width;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
-    caret.style.top = `${caretTop + typingArea.scrollTop}px`;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+    caret.style.top = `${caretTop}px`;
 }
 
 function moveCaretDown(afterIndex, index) {
     line++;
-    let caretLeft = 20;
+    let caretLeft = 0;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 20;
-    if (line > 2 && typingArea.scrollHeight - typingArea.scrollTop > typingArea.clientHeight) {
-        scrollDistance += 36;
-        typingArea.scrollTop = scrollDistance;
+    let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 35;
+    caret.style.top = `${caretTop}px`;
+    if (line > 2) {
+        if (line == 3) scrollDistance = 65;
+        else scrollDistance += 36;
+        if (totalLines - line <= maxLines) {
+        } else {
+            caret.style.top = `${nextLineTop}px`;
+            typingArea.scrollTop = scrollDistance;
+        }
     }
-    caret.style.top = `${caretTop + typingArea.scrollTop}px`;
 }
 
 function moveCaretBack(index) {
     if (line != 0) line--;
-    let caretLeft = index.getBoundingClientRect().left - firstWordLeft + 20;
+    let caretLeft = index.getBoundingClientRect().left - firstWordLeft;
     caret.style.left = `${caretLeft}px`;
-    let caretTop = index.getBoundingClientRect().top - firstWordTop + 20;
+    let caretTop = index.getBoundingClientRect().top - firstWordTop + 35;
+    caret.style.top = `${caretTop}px`;
     if (line >= 2) {
-        scrollDistance -= 36;
-        typingArea.scrollTop = scrollDistance;
+        if (line == 2) scrollDistance = 29;
+        else scrollDistance -= 36;
+        if (totalLines - line <= maxLines) {
+        } else {
+            caret.style.top = `${nextLineTop}px`;
+            typingArea.scrollTop = scrollDistance;
+        }
     }
-    caret.style.top = `${caretTop - typingArea.scrollTop}px`;
+}
+
+inputArea.addEventListener('click', () => {
+    popup.style.display = 'flex';
+    typingArea.style.opacity = '0';
+    inputText.textContent = '';
+    inputText.focus();
+})
+
+
+popup.addEventListener('click', (event) => {
+    if (!inputOwnTextWrapper.contains(event.target)) {
+        popup.style.display = 'none';
+        typingArea.style.opacity = '1';
+    }
+});
+
+function handlePopupInputButton() {
+    let ownInputText = inputText.textContent;
+    if (ownInputText.length == 0) {
+        inputText.textContent = "You haven't provided any text please provide some text to continue..."
+    }
+    else {
+        originalString = ownInputText.replace(/\s+/g, " ").trim();
+        makeHtml(originalString);
+        popup.style.display = 'none';
+        typingArea.style.opacity = '1';
+        input.focus();
+    }
 }
