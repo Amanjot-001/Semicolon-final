@@ -94,7 +94,7 @@ nav {
     margin-left: 1.5rem;
     padding: 1.8rem 1.5rem;
     text-decoration: none;
-    font-size: 2.2rem;
+    font-size: 1.5rem;
     color: var(--main-text-color);
     font-family: var(--font-1);
     transition: all 300ms ease;
@@ -119,7 +119,8 @@ nav {
 .own-text>a {
     text-decoration: none;
     padding: 1.8rem 1.5rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--main-text-color);
     font-family: var(--font-1);
     transition: all 300ms ease;
@@ -217,23 +218,24 @@ nav {
     overflow: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: start;
+    justify-content: space-evenly;
+    align-items: center;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
     transition: all 300ms ease;
 }
 
-.clock {
-    margin-left: 20%;
-}
+/* .clock {
+   width: 100%;
+   text-align: center;
+} */
 
 .time {
     background-color: transparent;
     border: none;
     cursor: pointer;
     width: max-content;
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--main-text-color);
     transition: all 300ms ease;
 }
@@ -246,13 +248,16 @@ nav {
 .timer-options {
     display: flex;
     list-style: none;
-    margin-left: 20%;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    /* margin-left: 20%; */
 }
 
 .timer-options>li {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     cursor: pointer;
-    margin-right: 20%;
+    /* margin-right: 20%; */
     color: var(--main-text-color);
     font-family: var(--font-1);
     transition: all 300ms ease;
@@ -265,8 +270,8 @@ nav {
 
 @media (max-width: 920px) {
     .timer-options>li {
-        font-size: 1.4rem;
-        margin-right: 15%;
+        font-size: 1rem;
+        /* margin-right: 15%; */
     }
 }
 
@@ -285,23 +290,24 @@ nav {
     grid-row-start: 2;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: start;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
     transition: all 300ms ease;
     overflow: auto;
+    padding: 1.8rem 1.5rem;
 }
 
 .result-content {
     width: max-content;
-    margin-left: 20%;
+    margin-left: 1.5rem;
     display: flex;
     flex-direction: column;
 }
 
 .result>div>div>p {
-    font-size: 1.6rem;
+    font-size: 1.45rem;
     width: max-content;
     margin: 10% 0;
     color: var(--main-text-color);
@@ -329,21 +335,21 @@ nav {
 .live-time {
     grid-row-start: 3;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: start;
+    /* flex-direction: column; */
+    justify-content: space-evenly;
+    align-items: center;
     border-right: 1px solid var(--border-color);
     transition: all 300ms ease;
     overflow: auto;
 }
 
-.live-time>div {
+/* .live-time>div {
     margin-left: 20%;
-}
+} */
 
 .live-time>div>p {
     width: max-content;
-    font-size: 3.5rem;
+    font-size: 3rem;
     color: var(--secondary-text-color);
     font-family: var(--font-1);
     transition: all 300ms ease;
@@ -382,13 +388,15 @@ nav {
 .typing-area {
     position: relative;
     grid-row: 1 / span 3;
-    margin: 2rem;
-    background-color: var(--typing-area-color);
+    /* margin: 2rem; */
+    /* background-color: var(--typing-area-color); */
+    background-color: rgba(0,0,0,0.5);
     transition: all 300ms ease;
-    border-radius: 5px;
-    padding: 20px;
-    overflow-y: auto;
+    /* border-radius: 5px; */
+    padding: 0px 20px;
+    overflow-y: scroll;
 }
+
 
 .typing-area::-webkit-scrollbar {
     background-color: transparent;
@@ -425,6 +433,7 @@ nav {
     transition: all 0.125s ease 0s;
     width: 100%;
     font-family: 'Roboto Mono', monospace;
+    padding-bottom: 36px;
 }
 
 .given-text span {
@@ -432,11 +441,11 @@ nav {
 }
 
 .given-text span.right {
-    color: green;
+    color: #2ECC40;
 }
 
 .given-text span.wrong {
-    color: red;
+    color: #FF4136;
 }
 
 .given-text span.notTyped {
@@ -448,13 +457,15 @@ nav {
     opacity: 1;
     width: 1.5px;
     height: 1.4em;
-    position: absolute;
-    background-color: white;
-    left: 20px;
+    position: sticky;
+    background-color: yellow;
+    left: 0px;
+    top: 35px;
     transition: all 0.125s ease 0s;
     margin: 0;
     padding: 0;
     animation: blink 1s infinite;
+    /* display: none; */
 }
 
 @keyframes blink {
@@ -549,6 +560,84 @@ nav {
 
 .caps-lock>p>span {
     color: red;
+}
+
+.inputOwnTextWrapper {
+    background: #323437;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 400px;
+    justify-content: center;
+    /* align-items: center; */
+    padding: 2rem;
+    border-radius: 5px;
+}
+
+.popups {
+    display: none;
+}
+
+.popup-wraper {
+    position: fixed;
+    /* opacity: 0.5; */
+    height: 100%;
+    width: 100%;
+    padding: 2rem;
+    background: rgba(0,0,0,0.75);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+}
+
+
+
+.inputOwnTextWrapper .heading {
+    font-size: 1.8rem;
+    color: #646669;
+    pointer-events: none;
+}
+
+.input-text {
+    padding: 0.5rem;
+    height: 180px;
+    border: 1px solid #646669;
+    outline: none;
+    caret-color: yellow;
+    font-size: 1.5rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-radius: 5px;
+    color: white;
+}
+
+.input-text::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+}
+
+
+.input-text::-webkit-scrollbar-thumb {
+    background-color: var(--main-text-color);
+    border-radius: 5px;
+}
+
+.inputOwnTextWrapper > .button {
+    background: #2c2e31;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background .125s,color .125s;
+    letter-spacing: 0.1rem;
+}
+
+.inputOwnTextWrapper > .button:hover {
+    background: whitesmoke;
+    color: #050a18;
 }
 
 @media (max-width: 800px) {
@@ -654,6 +743,7 @@ nav {
 
     .timer-options>li {
         margin-right: 0;
+        font-size: 1.2rem;
     }
 
     .result {
@@ -663,9 +753,10 @@ nav {
 
     .result {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 0rem 2rem;
     }
 
     .result-content {
@@ -676,7 +767,7 @@ nav {
 
     .result>div>div>p {
         margin: 0;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 
     .live-time {
@@ -711,6 +802,23 @@ nav {
     .result>div>div>p {
         margin-right: 10px;
     }
+
+    .inputOwnTextWrapper {
+        width: 300px;
+    }
+
+    .inputOwnTextWrapper .heading {
+        font-size: 1.5rem;
+    }
+
+    .input-text {
+        height: 150px;
+    }
+
+    .inputOwnTextWrapper > .button {
+        font-size: 1.2rem;
+    }
+    
 }
 
 @media (max-width: 350px) {
