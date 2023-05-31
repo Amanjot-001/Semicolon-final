@@ -10,6 +10,8 @@ const inputArea = document.querySelector('.own-text');
 const popup = document.querySelector('.popups');
 const inputOwnTextWrapper = document.querySelector('.inputOwnTextWrapper');
 const inputText = document.querySelector('.input-text');
+const focusPopup = document.querySelector('.focus-popup-wrapper');
+
 
 const str = document.querySelector(".given-text");
 const input = document.querySelector("#myInput");
@@ -26,10 +28,7 @@ let inputStarted = false;
 let clockHover = false;
 let intervalId = null;
 
-// let typedWords = 0;
-// let correctWords = 0;
 let totalWords = 1;
-// let totalChars = 0;
 let totalCharsTyped = 0;
 let correctCharsTyped = 0;
 let currentWordTyping = 0;
@@ -59,12 +58,15 @@ const capsMsg = document.querySelector('.caps-lock>p>span')
 
 const width = window.innerWidth || document.documentElement.clientWidth;
 const height = typingArea.getBoundingClientRect().height;
+// console.log(height);
 maxLines = Math.floor((height - 35) / 36) - 3;
+// console.log(maxLines);
 
 document.addEventListener('DOMContentLoaded', function () {
     var defaultTheme = 'theme1';
     document.documentElement.classList.add(defaultTheme);
 });
+
 
 input.style.height = '0';
 input.style.width = '0';
@@ -75,6 +77,7 @@ window.addEventListener('resize', () => {
     location.reload();
 })
 
+console.log(width);
 input.addEventListener("keyup", function (event) {
     if (event.getModifierState("CapsLock")) {
         capsLockIndicator.style.visibility = 'visible';
@@ -86,44 +89,43 @@ input.addEventListener("keyup", function (event) {
 });
 
 
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        input.focus();
-        typingArea.style.overflowY = 'hidden';
-    }
-});
+// document.addEventListener("keydown", function (event) {
+//     if (event.key === "Enter") {
+//         input.focus();
+//         typingArea.style.overflowY = 'hidden';
+//     }
+// });
 
-document.addEventListener('click', (event) => {
-    input.blur();
-    const clickedElement = event.target;
-    if (clickedElement.tagName.toLowerCase() !== 'button' &&
-        clickedElement.tagName.toLowerCase() !== 'a' &&
-        clickedElement.tagName.toLowerCase() !== 'li' &&
-        clickedElement.tagName.toLowerCase() !== 'p' &&
-        clickedElement.tagName.toLowerCase() !== 'input' &&
-        clickedElement.tagName.toLowerCase() !== 'i' &&
-        clickedElement.tagName.toLowerCase() !== 'span' &&
-        !clickedElement.classList.contains('typing-area')) {
+// document.addEventListener('click', (event) => {
+//     const clickedElement = event.target;
+//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
+//         clickedElement.tagName.toLowerCase() !== 'a' &&
+//         clickedElement.tagName.toLowerCase() !== 'li' &&
+//         clickedElement.tagName.toLowerCase() !== 'p' &&
+//         clickedElement.tagName.toLowerCase() !== 'input' &&
+//         clickedElement.tagName.toLowerCase() !== 'i' &&
+//         clickedElement.tagName.toLowerCase() !== 'span' &&
+//         !clickedElement.classList.contains('typing-area')) {
 
-        if (!mouseCaret.classList.contains('clicked'))
-            applyNextColorTheme();
-    }
+//         if (!mouseCaret.classList.contains('clicked'))
+//             applyNextColorTheme();
+//     }
 
-    if (clickedElement.tagName.toLowerCase() !== 'button' &&
-        clickedElement.tagName.toLowerCase() !== 'a' &&
-        clickedElement.tagName.toLowerCase() !== 'li' &&
-        clickedElement.tagName.toLowerCase() !== 'p' &&
-        clickedElement.tagName.toLowerCase() !== 'input' &&
-        clickedElement.tagName.toLowerCase() !== 'i' &&
-        clickedElement.tagName.toLowerCase() !== 'span' &&
-        !clickedElement.classList.contains('typing-area')) {
+//     if (clickedElement.tagName.toLowerCase() !== 'button' &&
+//         clickedElement.tagName.toLowerCase() !== 'a' &&
+//         clickedElement.tagName.toLowerCase() !== 'li' &&
+//         clickedElement.tagName.toLowerCase() !== 'p' &&
+//         clickedElement.tagName.toLowerCase() !== 'input' &&
+//         clickedElement.tagName.toLowerCase() !== 'i' &&
+//         clickedElement.tagName.toLowerCase() !== 'span' &&
+//         !clickedElement.classList.contains('typing-area')) {
 
-        mouseCaret.classList.add('clicked');
-        setTimeout(function () {
-            mouseCaret.classList.remove('clicked');
-        }, 800);
-    }
-});
+//         mouseCaret.classList.add('clicked');
+//         setTimeout(function () {
+//             mouseCaret.classList.remove('clicked');
+//         }, 800);
+//     }
+// });
 
 window.addEventListener('mousemove', (e) => {
     mouseCaret.style.top = e.pageY + 'px';
@@ -396,7 +398,7 @@ input.addEventListener("input", (e) => {
                 }
                 return;
             }
-            if (currentWordTyping >= totalWords) {
+            if (currentWordTyping >= TotalWords) {
                 final();
                 ended = true;
                 return;
@@ -514,47 +516,11 @@ function totalWordsInText(originalString) {
 }
 
 function Words() {
-    // input.value = input.value.replace(/\s+/g, " ").trim();
-    // let toCheckFirstWord = true;
-    // let toCheckOtherWords = false;
-    // for (let i = 0; i < input.value.length; i++) {
-    //     if (toCheckOtherWords === true)
-    //         toCheckFirstWord = true;
-    //     if (input.value[i] === ' ') {
-    //         typedWords++;
-    //         toCheckFirstWord = false;
-    //         toCheckOtherWords = true;
-    //     }
-    // }
-    // if (toCheckFirstWord === true && input.value.length < originalString.length)
-    //     typedWords++;
-    // if (input.value.length >= originalString.length)
-    //     typedWords++;
-
-    // let flag = true;
-    // for (let i = 0; i < input.value.length; i++) {
-    //     let index = document.querySelector(`p.given-text span.span${i}`)
-    //     if ((input.value[i] !== originalString[i] && input.value[i] !== ' ') || index.classList.contains('notTyped')) {
-    //         flag = false;
-    //     }
-    //     if (flag === true && input.value[i] === ' ' && input.value[i] === originalString[i]) {
-    //         correctWords++;
-    //     }
-    //     if (flag === false && input.value[i] === ' ') {
-    //         flag = true;
-    //     }
-    //     if (flag === true && i + 1 === input.value.length && originalString[i + 1] === ' ')
-    //         correctWords++;
-    //     if (flag === true && i + 1 === originalString.length)
-    //         correctWords++;
-    // }
-
     for (let i = 0; i < input.value.length; i++) {
         let index = document.querySelector(`p.given-text span.span${i}`)
         if (input.value[i] === originalString[i] && !index.classList.contains('notTyped'))
             correctCharsTyped++;
     }
-    // totalChars = originalString.length;
     totalCharsTyped = input.value.length;
 }
 
@@ -605,7 +571,7 @@ function final() {
     input.disabled = true;
     Words();
     S = ((correctCharsTyped / 5) / (cnt / 60)).toFixed(2);
-    A = ((correctCharsTyped/totalCharsTyped) * 100).toFixed(2);
+    A = ((correctCharsTyped / totalCharsTyped) * 100).toFixed(2);
     score.textContent = `${S} wpm`;
     accuracy.textContent = `${A} %`;
     timeSpent.textContent = `${(cnt / 60).toFixed(2)} min`;
@@ -626,6 +592,7 @@ function moveCaret(index) {
 
 function moveCaretDown(afterIndex, index) {
     line++;
+    console.log(line, totalLines);
     let caretLeft = 0;
     caret.style.left = `${caretLeft}px`;
     let caretTop = afterIndex.getBoundingClientRect().top - firstWordTop + 35;
@@ -639,6 +606,7 @@ function moveCaretDown(afterIndex, index) {
             typingArea.scrollTop = scrollDistance;
         }
     }
+    console.log(scrollDistance);
 }
 
 function moveCaretBack(index) {
@@ -658,13 +626,13 @@ function moveCaretBack(index) {
     }
 }
 
+
 inputArea.addEventListener('click', () => {
     popup.style.display = 'flex';
     typingArea.style.opacity = '0';
     inputText.textContent = '';
     inputText.focus();
 })
-
 
 popup.addEventListener('click', (event) => {
     if (!inputOwnTextWrapper.contains(event.target)) {
@@ -686,3 +654,20 @@ function handlePopupInputButton() {
         input.focus();
     }
 }
+
+focusPopup.addEventListener('click', () => {
+    input.focus();
+    typingArea.style.overflowY = 'hidden';
+    str.style.filter = 'blur(0px)';
+    focusPopup.style.display = 'none';
+    caret.style.backgroundColor = 'yellow';
+})
+
+document.addEventListener('click', (event) => {
+    if (!focusPopup.contains(event.target)) {
+        input.blur();
+        focusPopup.style.display = 'flex';
+        str.style.filter = 'blur(10px)';
+        caret.style.backgroundColor = 'transparent';
+    }
+})
