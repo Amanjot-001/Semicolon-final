@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Page</title>
 
-    <link rel="stylesheet" href="/typing.css">
+    <link rel="stylesheet" href="typing.css">
 
     <script src="https://kit.fontawesome.com/040eb06c51.js" crossorigin="anonymous"></script>
 
@@ -21,6 +21,15 @@
 
 <body>
     <div class="mouseCaret"></div>
+    <div class="popups">
+        <div class="popup-wraper">
+            <div class="inputOwnTextWrapper">
+                <div class="heading">Provide your own text</div>
+                <div class="input-text" contenteditable="true"></div>
+                <div class="button" onclick="handlePopupInputButton()">Start</div>
+            </div>
+        </div>
+    </div>
     <nav>
         <div class="brand-name">
             <a href="" class="brand-link grow-link">Semicolon</a>
@@ -34,7 +43,7 @@
                     <a href="">TEST</a>
                 </div>
                 <div class="own-text grow-link">
-                    <a href="">INPUT</a>
+                    <a href="#" onclick="return false;">INPUT</a>
                 </div>
             </div>
             <div class="profile">
@@ -78,20 +87,29 @@
             </div>
         </div>
         <div class="typing-area">
+            <div class="focus-popup">
+                <div class="focus-popup-wrapper">
+                    <div class="heading"><i class="fa-solid fa-arrow-pointer"></i>  Click Here To Start!</div>
+                </div>
+            </div>
             <div class="caret"></div>
             <div class="caps-lock">
                 <p>Caps Lock: <span></span></p>
             </div>
-            <p class="given-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem porro alias illo
-                explicabo odio, excepturi cum? Fuga alias sapiente, vitae velit assumenda, eveniet adipisci amet
-                consequatur odio sint fugit sequi!
+            <p class="given-text">
+                An operating system (OS) is a software program that manages computer hardware and software resources and provides a platform for other software to run on. It acts as an intermediary between the user and the computer hardware, enabling users to interact with the system and execute programs efficiently. The operating system plays a crucial role in managing various aspects of a computer system, including memory, file systems, input/output devices, and process management.
+                <!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis labore rerum ea optio nesciunt, quis inventore esse hic modi tenetur pariatur nam corrupti quidem, iusto repellat, eaque deserunt harum perspiciatis?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ad iure officiis dolores voluptatem magnam corrupti labore. Unde earum perferendis voluptas cumque omnis natus sed quaerat quibusdam vitae! Et, deserunt! -->
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea alias deserunt minus quod, nostrum quisquam qui fugiat iure numquam magnam ducimus distinctio facere delectus dolorem necessitatibus sit voluptatibus error aut!
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur officia voluptatibus impedit beatae repellendus doloremque assumenda iure 
+                <!-- Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem quia, alias autem a consequuntur sapiente, doloremque quisquam ad quas nam nihil nulla praesentium quod fuga expedita obcaecati perferendis facere maxime. -->
             </p>
             <div id="after-text" class="hidden"></div>
+            <input type="text" id="myInput" autocomplete="off">
         </div>
-        <input type="text" id="myInput" autocomplete="off">
     </div>
 
-    <script src="/typing.js"></script>
+    <script src="typing.js"></script>
 </body>
 
 </html>
